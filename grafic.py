@@ -4,7 +4,7 @@ import numpy as np
 def signal(msg):
     const = 10
     periods = []
-    t = np.linspace(1, 1000, 1000)
+    t = np.linspace(1, 100, 1000)
     x_volts = const * np.sin(t / (2 * np.pi))
     j = -1
     for i in range(1000):
@@ -22,9 +22,13 @@ def signal(msg):
 
 def inter(msg):
     periods = signal(msg)[0]
-    for i in range(len(msg) - 1):
+    for i in range(len(periods) - 1):
         for j in range(20):
-            periods[i][100 - j - 1][1] = periods[i][100 - j - 1][1] + periods[i + 1][j][1]
+            try:
+                periods[i][100 - j - 1][1] = periods[i][100 - j - 1][1] + periods[i + 1][j][1]
+            except Exception:
+                print(len(periods), i, len(periods[i]), 100 - j - 1, j)
+                exit()
         for j in range(20):
             periods[i + 1][j][1] = periods[i][100 - j - 1][1] + periods[i + 1][j][1]
     return periods
